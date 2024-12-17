@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Homework</title>
+    <link id="favicon" rel="icon" href="data:image/png;base64,iVBORw0KGgo=" /> <!-- Default blank favicon -->
+    <style>
+        /* Main page styling */
+        body {
+            background-color: black;
+            color: green;
+            font-family: monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Styling for the heading */
+        h1 {
+            margin-top: 20px;
+            color: green;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid green; /* Cursor effect */
+        }
+
+        /* Styling for buttons */
+        button {
+            padding: 10px 20px;
+            background-color: black;
+            color: green;
+            border: 1px solid green;
+            font-family: monospace;
+            margin-bottom: 20px;
+        }
+
+        /* Popup styling */
+        #popup, #settingsPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: black;
+            color: green;
+            border: 1px solid green;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 255, 0, 0.2);
+            z-index: 1000;
+        }
+
+        #popup input[type="text"], #settingsPopup input {
+            width: 200px;
+            padding: 5px;
+            margin: 5px 0;
+            background-color: black;
+            color: green;
+            border: 1px solid green;
+            font-family: monospace;
+        }
+
+        #popup button, #settingsPopup button {
+            padding: 5px 10px;
+            background-color: black;
+            color: green;
+            border: 1px solid green;
+            font-family: monospace;
+        }
+
+        #settingsPopup label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        #popup .close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: none;
+            color: green;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* New button in bottom left corner */
+        #redirectButton {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: black;
+            color: green;
+            border: 1px solid green;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="animatedText"></h1>
+    <button id="insertLinkButton" onclick="showPopup()">Insert Link</button>
+    <button onclick="showSettings()">Settings</button>
+
+    <!-- Insert Link Popup -->
+    <div id="popup">
+        <button class="close" onclick="closePopup()">X</button>
+        <input type="text" id="linkInput" placeholder="Enter a link..." />
+        <button onclick="openEmbeddedLink()">Open</button>
+    </div>
+
+    <!-- Settings Popup -->
+    <div id="settingsPopup">
+        <label for="websiteName">Website Name:</label>
+        <input type="text" id="websiteName" placeholder="Enter website name" />
+
+        <label for="faviconFile">Favicon File:</label>
+        <input type="file" id="faviconFile" accept="image/*" />
+
+        <label for="bgColor">Background Color (RGB):</label>
+        <input type="text" id="bgColor" placeholder="e.g., 0,0,0" />
+
+        <label for="textColor">Text Color (RGB):</label>
+        <input type="text" id="textColor" placeholder="e.g., 0,255,0" />
+
+        <label for="buttonColor">Button Color (RGB):</label>
+        <input type="text" id="buttonColor" placeholder="e.g., 0,0,0" />
+
+        <button onclick="saveSettings()">Save</button>
+        <button onclick="resetSettings()">Reset</button>
+        <button onclick="closeSettings()">Close</button>
+    </div>
+
+    <!-- Button to redirect to another website -->
+    <button id="redirectButton" onclick="redirectToWebsite()">Join Minecraft Server</button>
+
+    <script>
+        const texts = [
+            "V2",
+            "In memory of db100.boxd.africa",
+            "whats a calc",
+            "you",
+            "we",
+            "redirect",
+            "is that gum on the ceiling?",
+            "block",
+            "dont fall",
+            "now has over 300 lines of code!",
+            "does not include free wifi"
+        ];
+
+        const randomIndex = Math.floor(Math.random() * texts.length);
+        const selectedText = texts[randomIndex];
+
+        const animatedTextElement = document.getElementById('animatedText');
+        let currentIndex = 0;
+
+        const defaultSettings = {
+            websiteName: "ClassLink",
+            favicon: "data:image/png;base64,iVBORw0KGgo=",
+            bgColor: "0,0,0",
+            textColor: "0,255,0",
+            buttonColor: "0,0,0",
+        };
+
+        function typeText() {
+            if (currentIndex < selectedText.length) {
+                animatedTextElement.innerHTML += selectedText[currentIndex];
+                currentIndex++;
+                setTimeout(typeText, 75);
+            } else {
+                animatedTextElement.style.borderRight = "none";
+            }
+        }
+
+        window.onload = function () {
+            typeText();
+            loadSettings();
+        };
+
+        function showPopup() {
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('insertLinkButton').style.display = 'none';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('insertLinkButton').style.display = 'block';
+        }
+
+        function openEmbeddedLink() {
+            let link = document.getElementById('linkInput').value.trim();
+            if (!link.startsWith("http://") && !link.startsWith("https://")) {
+                link = "https://" + link;
+            }
+
+            const newWindow = window.open("about:blank", "_blank");
+            if (newWindow) {
+                const title = document.title;
+                newWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>${title}</title>
+                        <style>
+                            html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: black; color: green; font-family: monospace; }
+                            iframe { width: 100vw; height: 100vh; border: none; }
+                        </style>
+                    </head>
+                    <body>
+                        <iframe src="${link}" allowfullscreen></iframe>
+                    </body>
+                    </html>
+                `);
+                newWindow.document.close();
+                closePopup();
+                document.getElementById('linkInput').value = '';
+            } else {
+                alert("Popup blocked! Please allow popups for this website.");
+            }
+        }
+
+        function showSettings() {
+            document.getElementById('settingsPopup').style.display = 'block';
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsPopup').style.display = 'none';
+        }
+
+        function saveSettings() {
+            const name = document.getElementById('websiteName').value || defaultSettings.websiteName;
+            const faviconFile = document.getElementById('faviconFile').files[0];
+            const bgColor = document.getElementById('bgColor').value || defaultSettings.bgColor;
+            const textColor = document.getElementById('textColor').value || defaultSettings.textColor;
+            const buttonColor = document.getElementById('buttonColor').value || defaultSettings.buttonColor;
+
+            localStorage.setItem('websiteName', name);
+            localStorage.setItem('bgColor', bgColor);
+            localStorage.setItem('textColor', textColor);
+            localStorage.setItem('buttonColor', buttonColor);
+
+            if (faviconFile) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    localStorage.setItem('favicon', e.target.result);
+                    applySettings();
+                };
+                reader.readAsDataURL(faviconFile);
+            } else {
+                applySettings();
+            }
+
+            closeSettings();
+        }
+
+        function resetSettings() {
+            localStorage.clear();
+            applySettings(true);
+            closeSettings();
+        }
+
+        function loadSettings() {
+            const name = localStorage.getItem('websiteName') || defaultSettings.websiteName;
+            const favicon = localStorage.getItem('favicon') || defaultSettings.favicon;
+            const bgColor = localStorage.getItem('bgColor') || defaultSettings.bgColor;
+            const textColor = localStorage.getItem('textColor') || defaultSettings.textColor;
+            const buttonColor = localStorage.getItem('buttonColor') || defaultSettings.buttonColor;
+
+            document.title = name;
+            document.getElementById('favicon').href = favicon;
+            document.body.style.backgroundColor = `rgb(${bgColor})`;
+            document.body.style.color = `rgb(${textColor})`;
+            document.querySelector('h1').style.color = `rgb(${textColor})`;
+            document.querySelectorAll('button').forEach(btn => {
+                btn.style.backgroundColor = `rgb(${buttonColor})`;
+                btn.style.color = `rgb(${textColor})`;
+            });
+        }
+
+        function applySettings(reset = false) {
+            if (reset) {
+                document.title = defaultSettings.websiteName;
+                document.getElementById('favicon').href = defaultSettings.favicon;
+                document.body.style.backgroundColor = `rgb(${defaultSettings.bgColor})`;
+                document.body.style.color = `rgb(${defaultSettings.textColor})`;
+                document.querySelector('h1').style.color = `rgb(${defaultSettings.textColor})`;
+                document.querySelectorAll('button').forEach(btn => {
+                    btn.style.backgroundColor = `rgb(${defaultSettings.buttonColor})`;
+                    btn.style.color = `rgb(${defaultSettings.textColor})`;
+                });
+            } else {
+                loadSettings();
+            }
+        }
+
+        function redirectToWebsite() {
+            window.location.href = "https://howtojoin.mathresearch.top"; // Replace with your desired URL
+        }
+    </script>
+</body>
+</html>
