@@ -99,6 +99,17 @@
             border: 1px solid green;
             font-family: monospace;
         }
+        /* New button in bottom right corner */
+        #changelogsButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: black;
+            color: green;
+            border: 1px solid green;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
@@ -138,6 +149,9 @@
     <!-- Button to redirect to another website -->
     <button id="redirectButton" onclick="redirectToWebsite()">Bored without games to play?</button>
 
+    <!-- Button for changelogs -->
+    <button id="changelogsButton" onclick="redirectToChangelogs()">Changelogs</button>
+
     <script>
         const texts = [
             "V2",
@@ -145,9 +159,13 @@
             "whats a calc",
             "you",
             "we",
+            "now offering your own messages from right here starting at $1",
             "redirect",
+            "not sponsored yet",
+            "this was supposed to be a compliment but its this message showing the reason what this was supposed to be and i am now realizing that this text is too long that it is expanding as it types",
             "is that gum on the ceiling?",
             "block",
+            "If enough money is earned then i will explain what PeanutVM is",
             "dont fall",
             "now has over 300 lines of code!",
             "does not include free wifi"
@@ -298,7 +316,10 @@
         }
 
         function redirectToWebsite() {
-            window.location.href = "https://howtojoin.mathresearch.top"; // Replace with your desired URL
+            window.location.href = "https://howtojoin.mathresearch.top"; // 
+	}
+        function redirectToChangelogs() {
+            window.location.href = "https://help.schoolhomework.top/changelogs"; // 
         }
     </script>
 </body>
